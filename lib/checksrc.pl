@@ -717,12 +717,12 @@ sub scanfile {
         my $commityear = undef;
         @copyright = sort {$$b{year} cmp $$a{year}} @copyright;
 
-        if(`git status -s -- $file` =~ /^ [MARCU]/) {
-            $commityear = (localtime(time))[5] + 1900;
-        }
-        elsif (`git rev-list --count origin/master..HEAD -- $file` !~ /^0/) {
-            my $grl = `git rev-list --max-count=1 --timestamp HEAD -- $file`;
+        my $grl = `git rev-list --max-count=1 --timestamp HEAD -- $file`;
+        if($grl) {
             $commityear = (localtime((split(/ /, $grl))[0]))[5] + 1900;
+        }
+        elsif(`git status -s -- $file` =~ /^ [MARCU]/) {
+            $commityear = (localtime(time))[5] + 1900;
         }
 
         if(defined($commityear) && scalar(@copyright) &&
