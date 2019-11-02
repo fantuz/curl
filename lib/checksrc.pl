@@ -6,7 +6,7 @@
 #                            | (__| |_| |  _ <| |___
 #                             \___|\___/|_| \_\_____|
 #
-# Copyright (C) 2011 - 2018, Daniel Stenberg, <daniel@haxx.se>, et al.
+# Copyright (C) 2011 - 2019, Daniel Stenberg, <daniel@haxx.se>, et al.
 #
 # This software is licensed as described in the file COPYING, which
 # you should have received as part of this distribution. The terms
@@ -717,12 +717,15 @@ sub scanfile {
         my $commityear = undef;
         @copyright = sort {$$b{year} cmp $$a{year}} @copyright;
 
-        my $grl = `git rev-list --max-count=1 --timestamp HEAD -- $file`;
-        if($grl) {
-            $commityear = (localtime((split(/ /, $grl))[0]))[5] + 1900;
-        }
-        elsif(`git status -s -- $file` =~ /^ [MARCU]/) {
+        # if the file is modified, assume commit year this year
+        if(`git status -s -- $file` =~ /^ [MARCU]/) {
             $commityear = (localtime(time))[5] + 1900;
+        }
+        else {
+            my $grl = `git rev-list --max-count=1 --timestamp HEAD -- $file`;
+            if($grl) {
+                $commityear = (localtime((split(/ /, $grl))[0]))[5] + 1900;
+            }
         }
 
         if(defined($commityear) && scalar(@copyright) &&
