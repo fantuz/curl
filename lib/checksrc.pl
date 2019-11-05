@@ -720,6 +720,7 @@ sub scanfile {
         # if the file is modified, assume commit year this year
         if(`git status -s -- $file` =~ /^ [MARCU]/) {
             $commityear = (localtime(time))[5] + 1900;
+            print STDERR "y: $commityear (modified)\n";
         }
         else {
             my $grl = `git rev-list --max-count=1 --timestamp HEAD -- $file`;
