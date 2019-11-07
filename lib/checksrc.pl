@@ -723,6 +723,9 @@ sub scanfile {
             print STDERR "y: $commityear (modified)\n";
         }
         else {
+            if($file eq "./arpa_telnet.h") {
+              `git rev-list --max-count=99 --timestamp HEAD -- ./arpa_telnet.h`
+            }
             my $grl = `git rev-list --max-count=1 --timestamp HEAD -- $file`;
             if($grl) {
                 my $abc = `git log -n 1 --pretty=format:"%ci %H" -- $file`;
