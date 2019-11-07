@@ -724,7 +724,7 @@ sub scanfile {
         }
         else {
             if($file eq "./arpa_telnet.h") {
-              `git rev-list --max-count=99 --timestamp HEAD -- ./arpa_telnet.h`
+              `git rev-list --max-count=99 --timestamp HEAD -- ./arpa_telnet.h 1>&2`
             }
             my $grl = `git rev-list --max-count=1 --timestamp HEAD -- $file`;
             if($grl) {
